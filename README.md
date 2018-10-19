@@ -21,3 +21,53 @@ Would get turned into the following.
 ##alamut:source=x:name=CLASS:color=192,192,192
 1       x   .       865595  865595  .       .       .       CLASS=DM?;ID=CM1613956;ACC_NUM=CM1613956;PHEN=Retinitis_pigmentosa;PubMed=27734943;link=https://portal.biobase-international.com/hgmd/pro/mut.php?acc=CM1613956
 ```
+
+
+## How to use it
+
+### Build it
+After cloning this repository you can build using Apache Maven 3.x.
+
+```bash
+cd BiorToTrack
+mvn clean package
+```
+
+### Run it
+
+#### Getting the help screen.
+Assumming you have a Java JRE 8+ on your path...
+```bash
+java -jar target/BiorCatalogExtractor-1.0-SNAPSHOT.jar -h
+
+Option                     Description
+------                     -----------
+-a, --attributes <String>  A comma delimited list of the paths to within the
+                             catalog to pull out fields to include.
+-c, --catalog-file <File>  The file that is the catalog.tsv often ending in .
+                             tsv.bgz
+--color [String]           A color in R,G,B format. R,G,B between 0 and 255.
+                             (default: 192,192,192)
+-h, --help                 Display help.
+-o, --output-file <File>   The output file.  If not specified it will go to
+                             standard out.
+-u, --url <String>         A url template that should include a %{FIELD_NAME}%
+                             in it.  We will create a URL= attribute with that
+                             template filled out.
+```
+
+#### Transforming a catalog
+
+This will pull the CLASS, ID, ACC_NUM, PHEN, and PubMed attributes.
+
+```bash
+java -jar target/BiorCatalogExtractor-1.0-SNAPSHOT.jar \
+    # select which attributes to pull out of catalog
+    --attributes CLASS,ID,ACC_NUM,PHEN,PubMed \
+    # adds a link= attribute using this as a pattern for each entry in bed
+    --url https://linkToweb.com?acc=%{ACC_NUM}% \
+    # specify the input
+    --catalog-file /path/to/catalog.vcf.tsv.bgz
+    # the output file, if not specified it will go to stdout
+    --output-file /path/to/output.gff3
+```
