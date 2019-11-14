@@ -70,6 +70,10 @@ public class BiorCatalogEntry {
     public Object getValue(String path){
         JsonNode node = getJsonNode(path);
 
+        if(node == null){
+            return null;
+        }
+
         switch (node.getNodeType()){
             case NULL:
                 return null;
